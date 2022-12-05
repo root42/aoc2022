@@ -39,7 +39,9 @@
 (defn calc-max-calories
   "Calculates the maximum number of calories in the elf backpacks."
   [input]
-  (apply max (map #(apply + %) input))
+  (->> input
+       (map #(apply + %))
+       (apply max))
   )
 
 (defn calc-top-three-calories
