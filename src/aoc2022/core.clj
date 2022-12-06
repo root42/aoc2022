@@ -61,7 +61,7 @@
   A: rock, B: paper, C: scissors
   Player 2:
   X: rock (1 point), Y: paper (2 points), Z: scissors (3 points)
-  Lost game (0 points), Draw game (1 point), Won game (6 points)"
+  Lost game (0 points), Draw game (3 points), Won game (6 points)"
   [i1 i2]
   (let [p1 (case i1
              "A" 0
