@@ -54,11 +54,50 @@
        (apply +)
        ))
 
+;; day 2
+(defn rps-score
+  "Calculates score of a single RPS move:
+  Player 1:
+  A: rock, B: paper, C: scissors
+  Player 2:
+  X: rock (1 point), Y: paper (2 points), Z: scissors (3 points)
+  Lost game (0 points), Draw game (1 point), Won game (6 points)"
+  [i1 i2]
+  (let [p1 (case i1
+             "A" 0
+             "B" 1
+             "C" 2)
+        p2 (case i2
+             "X" 0
+             "Y" 1
+             "Z" 2)
+        res (- p2 p1)]
+    (condp = res
+      ; draw
+      0 (+ p2 1 3)
+      ; won
+      1 (+ p2 1 6)
+      -2 (+ p2 1 6)
+      ; lost
+      (+ p2 1)
+      )
+    )
+  )
+
+(defn calc-rps-score
+  "Calculates the cumulative score for the rock paper scissors game."
+  [input]
+  (apply + (map #(apply rps-score %) input))
+  )
+
 (defn -main
   "Advent of Code 2022."
   [& args]
   (let [input (read-chunked-integer-input "resources/input_1.txt")]
     (println "1.1 max number of calories = " (calc-max-calories input))
     (println "1.2 top three elves' calories = " (calc-top-three-calories input))
+    )
+  (let [input (map #(string/split % #" ") (read-input "resources/input_2.txt"))]
+    (println "2.1 Rock-Paper-Scissors Score = " (calc-rps-score input))
     )
   )
