@@ -143,6 +143,21 @@
        (map char-to-int)
        (apply +)))
 
+(defn calc-badge-priorities
+  "Every three lines of input are an elf group. Find the item that all three have
+  in common (called the badge) and compute the sum of all badge priorities."
+  [input]
+  (loop [groups input
+         prios 0]
+    (if (< (count groups) 3)
+      prios
+      (let [group (take 3 groups)
+            s1 (into #{} (nth group 0))
+            s2 (into #{} (nth group 1))
+            s3 (into #{} (nth group 2))
+            badge (first (clojure.set/intersection s1 s2 s3))]
+        (recur (drop 3 groups) (+ prios (char-to-int badge)))))))
+
 (defn -main
   "Advent of Code 2022."
   [& args]
@@ -156,5 +171,6 @@
     )
   (let [input (read-input "resources/input_3.txt")]
     (println "3.1 Sum of duplicate item priorities = " (calc-duplicate-item-priorities input))
+    (println "3.1 Sum of badge priorities = " (calc-badge-priorities input))
     )
   )
