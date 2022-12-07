@@ -159,6 +159,15 @@
         (recur (drop 3 groups) (+ prios (char-to-int badge)))))))
 
 ;; day 4
+(defn intervals-overlap?
+  "Returns true if the intervals overlap each other, nil otherwise."
+  [x1 y1 x2 y2]
+  ;; As we allow for zero-width intervals (e.g. [6 6] to count, we
+  ;; need to compare with -1 and then allow overlap width of 0
+  (if (>= (max -1 (- (min y1 y2) (max x1 x2))) 0)
+    true
+    nil))
+
 (defn interval-contains-interval?
   "Returns true if either interval [x1 y1] contains [x2 y2], or the
   other way around. nil if neither."
@@ -176,12 +185,20 @@
   [(map #(Integer. %) (string/split s1 #"-")) (map #(Integer. %) (string/split s2 #"-"))]
   )
 
+(defn calc-including-pairs
+  "Calculates the number of interval pairs including one of its
+  intervals in the other in the given input."
+  [input]
+  (let [str-pairs (map #(string/split % #",") input)
+        pairs (map make-intervals str-pairs)]
+    (count (filter #(apply interval-contains-interval? (flatten %)) pairs))))
+
 (defn calc-overlapping-pairs
   "Calculates the number of overlapping interval pairs in the input."
   [input]
   (let [str-pairs (map #(string/split % #",") input)
         pairs (map make-intervals str-pairs)]
-    (count (filter #(apply interval-contains-interval? (flatten %)) pairs))))
+    (count (filter #(apply intervals-overlap? (flatten %)) pairs))))
 
 (defn -main
   "Advent of Code 2022."
@@ -199,6 +216,7 @@
     (println "3.1 Sum of badge priorities = " (calc-badge-priorities input))
     )
   (let [input (read-input "resources/input_4.txt")]
+    (println "4.1 Number of including pairs = " (calc-including-pairs input))
     (println "4.1 Number of overlapping pairs = " (calc-overlapping-pairs input))
     )
   )
