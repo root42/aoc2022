@@ -116,6 +116,33 @@
   (apply + (map #(apply rps-cheat-score %) input))
   )
 
+;; day 3
+
+(defn char-to-int
+  "Converts char to integer: a-z: 1-26, A-Z: 27-52."
+  [c]
+  (let [ci (int c)]
+    (if (>= ci (int \a))
+      (+ (- ci (int \a)) 1)
+      (+ (- ci (int \A)) 27))))
+
+(defn get-duplicate-char
+  "Returns the char that is duplicated in the first and second half of a string."
+  [line]
+  (let [s1 (into #{} (take (/ (count line) 2) line))
+        s2 (into #{} (drop (/ (count line) 2) line))]
+    (first (clojure.set/intersection s1 s2))))
+
+(defn calc-duplicate-item-priorities
+  "Each input line has ONE duplicate character in the first and second half.
+   And each char corresponds to a numerical value a-z: 1-26, A-Z: 27-52.
+   Compute the sum of these values for the duplicate characters."
+  [input]
+  (->> input
+       (map get-duplicate-char)
+       (map char-to-int)
+       (apply +)))
+
 (defn -main
   "Advent of Code 2022."
   [& args]
@@ -126,5 +153,8 @@
   (let [input (map #(string/split % #" ") (read-input "resources/input_2.txt"))]
     (println "2.1 Rock-Paper-Scissors Score = " (calc-rps-score input))
     (println "2.2 Rock-Paper-Scissors Score = " (calc-rps-cheat-score input))
+    )
+  (let [input (read-input "resources/input_3.txt")]
+    (println "3.1 Sum of duplicate item priorities = " (calc-duplicate-item-priorities input))
     )
   )
