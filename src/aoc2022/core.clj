@@ -202,10 +202,13 @@
 
 ;; day 5
 (defn move-crate
+  "In the pile 'stacks' moves 'n' crates from stack 'f' to stack 't',
+  using reversal if 'rev' is 'true'."
   [stacks rev n f t]
   (let [from (dec f)
         to (dec t)
-        items (rev (take n (reverse (nth stacks from))))
+        r (if rev identity reverse)
+        items (r (take n (reverse (nth stacks from))))
         stack1 (reverse (drop n (reverse (nth stacks from))))
         stack2 (concat (nth stacks to) items)]
     (-> stacks
@@ -213,6 +216,8 @@
         (assoc to stack2))))
 
 (defn parse-move
+  "Parses a move string like 'move 3 from 8 to 9' into a vector 
+  [3 8 9]."
   [s]
   (let [parts (string/split s #" ")]
     [(Integer. (nth parts 1))
@@ -220,7 +225,9 @@
      (Integer. (nth parts 5))]))
 
 (defn calc-top-crates
-  [input f]
+  "Calculates the top crates given input. You can either have the crates
+  reversed when moving, or not."
+  [input reversed]
   (let [[stacks-string move-string] (string/split input #"\n\n")
         stacks (string/split-lines stacks-string)
         moves (map parse-move (string/split-lines move-string))]
@@ -228,10 +235,7 @@
            m moves]
       (if (= (count m) 0)
         (map last s)
-        (recur (apply (partial move-crate s f) (first m)) (drop 1 m)))
-      )
-    )
-  )
+        (recur (apply (partial move-crate s reversed) (first m)) (drop 1 m))))))
 
 (defn -main
   "Advent of Code 2022."
@@ -253,7 +257,7 @@
     (println "4.1 Number of overlapping pairs = " (calc-overlapping-pairs input))
     )
   (let [input (slurp "resources/input_5.txt")]
-    (println "4.1 Top crates = " (calc-top-crates input identity))
-    (println "4.1 Top crates, no reversal while moving = " (calc-top-crates input reverse))
+    (println "4.1 Top crates = " (calc-top-crates input true))
+    (println "4.1 Top crates, no reversal while moving = " (calc-top-crates input nil))
     )
   )
