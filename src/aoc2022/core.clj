@@ -200,6 +200,39 @@
         pairs (map make-intervals str-pairs)]
     (count (filter #(apply intervals-overlap? (flatten %)) pairs))))
 
+;; day 5
+(defn move-crate
+  [stacks rev n f t]
+  (let [from (dec f)
+        to (dec t)
+        items (rev (take n (reverse (nth stacks from))))
+        stack1 (reverse (drop n (reverse (nth stacks from))))
+        stack2 (concat (nth stacks to) items)]
+    (-> stacks
+        (assoc from stack1)
+        (assoc to stack2))))
+
+(defn parse-move
+  [s]
+  (let [parts (string/split s #" ")]
+    [(Integer. (nth parts 1))
+     (Integer. (nth parts 3))
+     (Integer. (nth parts 5))]))
+
+(defn calc-top-crates
+  [input f]
+  (let [[stacks-string move-string] (string/split input #"\n\n")
+        stacks (string/split-lines stacks-string)
+        moves (map parse-move (string/split-lines move-string))]
+    (loop [s stacks
+           m moves]
+      (if (= (count m) 0)
+        (map last s)
+        (recur (apply (partial move-crate s f) (first m)) (drop 1 m)))
+      )
+    )
+  )
+
 (defn -main
   "Advent of Code 2022."
   [& args]
@@ -218,5 +251,9 @@
   (let [input (read-input "resources/input_4.txt")]
     (println "4.1 Number of including pairs = " (calc-including-pairs input))
     (println "4.1 Number of overlapping pairs = " (calc-overlapping-pairs input))
+    )
+  (let [input (slurp "resources/input_5.txt")]
+    (println "4.1 Top crates = " (calc-top-crates input identity))
+    (println "4.1 Top crates, no reversal while moving = " (calc-top-crates input reverse))
     )
   )
