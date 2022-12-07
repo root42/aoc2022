@@ -237,6 +237,18 @@
         (map last s)
         (recur (apply (partial move-crate s reversed) (first m)) (drop 1 m))))))
 
+;; day 6
+(defn find-start-marker
+  [input n]
+  (loop [data (drop n input)
+         window (take n input)
+         pos n]
+    (if (= (count (into #{} window)) n)
+      pos
+      (if (= (count input) 0)
+        nil
+        (recur (drop 1 data) (concat (drop 1 window) [(first data)]) (inc pos))))))
+
 (defn -main
   "Advent of Code 2022."
   [& args]
@@ -250,14 +262,18 @@
     )
   (let [input (read-input "resources/input_3.txt")]
     (println "3.1 Sum of duplicate item priorities = " (calc-duplicate-item-priorities input))
-    (println "3.1 Sum of badge priorities = " (calc-badge-priorities input))
+    (println "3.2 Sum of badge priorities = " (calc-badge-priorities input))
     )
   (let [input (read-input "resources/input_4.txt")]
     (println "4.1 Number of including pairs = " (calc-including-pairs input))
-    (println "4.1 Number of overlapping pairs = " (calc-overlapping-pairs input))
+    (println "4.2 Number of overlapping pairs = " (calc-overlapping-pairs input))
     )
   (let [input (slurp "resources/input_5.txt")]
-    (println "4.1 Top crates = " (calc-top-crates input true))
-    (println "4.1 Top crates, no reversal while moving = " (calc-top-crates input nil))
+    (println "5.1 Top crates = " (calc-top-crates input true))
+    (println "5.2 Top crates, no reversal while moving = " (calc-top-crates input nil))
+    )
+  (let [input (slurp "resources/input_6.txt")]
+    (println "6.1 Start of packet marker after = " (find-start-marker input 4))
+    (println "6.2 Start of message marker after = " (find-start-marker input 14))
     )
   )

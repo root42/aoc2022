@@ -1,36 +1,15 @@
 # aoc2022
 
-FIXME: description
+Solutions for the Advent of Code 2022, written in Clojure
 
 ## Installation
 
-Download from http://example.com/FIXME.
-
-## Usage
-
-FIXME: explanation
-
-    $ java -jar aoc2022-0.1.0-standalone.jar [args]
-
-## Options
-
-FIXME: listing of options this app accepts.
-
-## Examples
-
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
+Download leiningen from https://leiningen.org/ and run "lein run" in
+the main directory.
 
 ## License
 
-Copyright © 2022 FIXME
+Copyright © 2022 Arne Schmitz
 
 This program and the accompanying materials are made available under the
 terms of the Eclipse Public License 2.0 which is available at
