@@ -90,6 +90,32 @@
   (apply + (map #(apply rps-score %) input))
   )
 
+(defn rps-cheat-score
+  "Determine RPS move score, if X, Y, Z mean 'lose', 'draw', 'win'."
+  [i1 i2]
+  (let [p1 (case i1
+             "A" 0
+             "B" 1
+             "C" 2)
+        ; lose -> choose one less, draw -> choose same, win -> choose one more
+        res (case i2
+              "X" -1
+              "Y" 0
+              "Z" 1)
+        ; actual value we use is p1 + res modulo three, as RPS is non-transitive
+        p2 (mod (+ p1 res) 3)]
+    ; score is player 2 plus 1
+    ; plus the intended result (-1,0,1) plus 1 times three (0,3,6)
+    (+ p2 1 (* 3 (+ res 1)))
+    )
+  )
+
+(defn calc-rps-cheat-score
+  "Calculates the cumulative score for the rock paper scissors game."
+  [input]
+  (apply + (map #(apply rps-cheat-score %) input))
+  )
+
 (defn -main
   "Advent of Code 2022."
   [& args]
@@ -99,5 +125,6 @@
     )
   (let [input (map #(string/split % #" ") (read-input "resources/input_2.txt"))]
     (println "2.1 Rock-Paper-Scissors Score = " (calc-rps-score input))
+    (println "2.2 Rock-Paper-Scissors Score = " (calc-rps-cheat-score input))
     )
   )
