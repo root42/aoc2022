@@ -158,6 +158,31 @@
             badge (first (clojure.set/intersection s1 s2 s3))]
         (recur (drop 3 groups) (+ prios (char-to-int badge)))))))
 
+;; day 4
+(defn interval-contains-interval?
+  "Returns true if either interval [x1 y1] contains [x2 y2], or the
+  other way around. nil if neither."
+  [x1 y1 x2 y2]
+  (if (and (<= x1 x2) (>= y1 y2))
+    true
+    (if (and (<= x2 x1) (>= y2 y1))
+      true
+      nil)))
+
+(defn make-intervals
+  "From a vector of strings like ['5-6' '4-8'] it will create the
+  interval structure [[5 6] [4 8]]"
+  [[s1 s2]]
+  [(map #(Integer. %) (string/split s1 #"-")) (map #(Integer. %) (string/split s2 #"-"))]
+  )
+
+(defn calc-overlapping-pairs
+  "Calculates the number of overlapping interval pairs in the input."
+  [input]
+  (let [str-pairs (map #(string/split % #",") input)
+        pairs (map make-intervals str-pairs)]
+    (count (filter #(apply interval-contains-interval? (flatten %)) pairs))))
+
 (defn -main
   "Advent of Code 2022."
   [& args]
@@ -172,5 +197,8 @@
   (let [input (read-input "resources/input_3.txt")]
     (println "3.1 Sum of duplicate item priorities = " (calc-duplicate-item-priorities input))
     (println "3.1 Sum of badge priorities = " (calc-badge-priorities input))
+    )
+  (let [input (read-input "resources/input_4.txt")]
+    (println "4.1 Number of overlapping pairs = " (calc-overlapping-pairs input))
     )
   )
